@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "238795858003",
+    "project_id": "proverbs-ebe59",
+    "storage_bucket": "proverbs-ebe59.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238795858003:android:e10347ad2bac1e944b66a6",
+        "android_client_info": {
+          "package_name": "com.example.proverbs"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKURR06tFcSlvFGAlXazkAlcrZmoEla1k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238795858003:android:eefd4be455ada6764b66a6",
+        "android_client_info": {
+          "package_name": "tadalatestudio.com.tifawt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKURR06tFcSlvFGAlXazkAlcrZmoEla1k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
