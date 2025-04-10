@@ -45,6 +45,8 @@ dev_dependencies:
   flutter_native_splash: ^2.3.3
   flutter_lints: ^5.0.0
 
+  
+
 flutter:
   uses-material-design: true
 

@@ -14,12 +14,7 @@ import 'utils/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Firebase
-  //await Firebase.initializeApp();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // Set preferred orientations
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -56,10 +51,10 @@ class MyApp extends StatelessWidget {
             //   GlobalWidgetsLocalizations.delegate,
             //   GlobalCupertinoLocalizations.delegate,
             // ],
-            supportedLocales: const [
-              Locale('en', 'US'),
-              Locale('ar', 'SA'), // Add Arabic for RTL support
-            ],
+            // supportedLocales: const [
+            //   Locale('en', 'US'),
+            //   Locale('ar', 'SA'), // Add Arabic for RTL support
+            // ],
           );
         },
       ),

@@ -179,7 +179,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
               title: 'Manage Proverbs',
               description: 'Add, edit, or delete proverbs',
               onTap: () {
-                //Implement manage proverbs screen
+                Navigator.of(
+                  context,
+                ).pushNamed(AppConstants.manageProverbsRoute);
               },
             ),
             const SizedBox(height: ThemeConstants.mediumPadding),
@@ -199,7 +201,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               title: 'Manage Users',
               description: 'View and manage user accounts',
               onTap: () {
-                // Implement manage users screen
+                Navigator.of(context).pushNamed(AppConstants.manageUsersRoute);
               },
             ),
           ],

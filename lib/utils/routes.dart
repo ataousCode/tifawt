@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tifawt/screens/admin/manage_users_screen.dart';
 
 import '../screens/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
@@ -13,6 +14,7 @@ import '../screens/settings/settings_screen.dart';
 import '../screens/admin/admin_dashboard.dart';
 import '../screens/admin/add_proverb_screen.dart';
 import '../screens/admin/manage_categories_screen.dart';
+import '../screens/admin/manage_proverbs_screen.dart';
 
 import 'constants.dart';
 
@@ -35,6 +37,9 @@ class Routes {
       AppConstants.addProverbRoute: (context) => const AddProverbScreen(),
       AppConstants.manageCategoriesRoute:
           (context) => const ManageCategoriesScreen(),
+      AppConstants.manageProverbsRoute:
+          (context) => const ManageProverbsScreen(),
+      AppConstants.manageUsersRoute: (context) => const ManageUsersScreen(),
     };
   }
 

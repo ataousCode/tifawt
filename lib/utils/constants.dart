@@ -28,6 +28,8 @@ class AppConstants {
   static const String addProverbRoute = '/add-proverb';
   static const String editProverbRoute = '/edit-proverb';
   static const String manageCategoriesRoute = '/manage-categories';
+  static const String manageProverbsRoute = '/manage-proverbs';
+  static const String manageUsersRoute = '/manage-users';
 
   // Animation durations
   static const int splashDuration = 2000; // milliseconds
