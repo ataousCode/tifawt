@@ -80,20 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _showDeleteAccountDialog() {
-    Helpers.showConfirmationDialog(
-      context: context,
-      title: 'Delete Account',
-      message:
-          'Are you sure you want to delete your account? This action cannot be undone.',
-      onConfirm: () {
-        //Implement delete account functionality
-        Helpers.showSnackBar(
-          context,
-          'Delete account functionality coming soon!',
-        );
-      },
-      confirmButtonText: 'Delete',
-    );
+    Navigator.of(context).pushNamed(AppConstants.deleteAccountRoute);
   }
 
   Future<void> _logout() async {
@@ -261,9 +248,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Column(
                         children: [
+                          ListTile(
+                            leading: const Icon(
+                              Icons.settings,
+                              color: ThemeConstants.primaryColor,
+                            ),
+                            title: const Text('Settings'),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppConstants.settingsRoute);
+                            },
+                          ),
+                          const Divider(),
                           // Change password
                           ListTile(
-                            leading: const Icon(Icons.lock),
+                            leading: const Icon(
+                              Icons.lock,
+                              color: ThemeConstants.primaryColor,
+                            ),
                             title: const Text('Change Password'),
                             trailing: const Icon(Icons.chevron_right),
                             onTap: _navigateToChangePassword,

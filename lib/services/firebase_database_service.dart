@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,21 +20,67 @@ class FirebaseDatabaseService {
   // ************ Proverbs Methods ************
 
   // Get all proverbs
-  Stream<List<Proverb>> getProverbs({String? categoryId}) {
-    Query query = _proverbsCollection.where('isActive', isEqualTo: true);
+  // Stream<List<Proverb>> getProverbs({String? categoryId}) {
+  //   Query query = _proverbsCollection.where('isActive', isEqualTo: true);
 
-    if (categoryId != null) {
-      query = query.where('categoryId', isEqualTo: categoryId);
-    }
+  //   if (categoryId != null) {
+  //     query = query.where('categoryId', isEqualTo: categoryId);
+  //   }
 
-    return query.orderBy('createdAt', descending: true).snapshots().map((
-      snapshot,
-    ) {
+  //   return query.orderBy('createdAt', descending: true).snapshots().map((
+  //     snapshot,
+  //   ) {
+  //     return snapshot.docs.map((doc) {
+  //       final data = doc.data() as Map<String, dynamic>;
+  //       return Proverb.fromJson(data);
+  //     }).toList();
+  //   });
+  // }
+  Future<List<Proverb>> getAllProverbs() async {
+    try {
+      // Just get all documents without filters or ordering
+      final snapshot = await _proverbsCollection.get();
+
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         return Proverb.fromJson(data);
       }).toList();
-    });
+    } catch (e) {
+      print('Error fetching proverbs: $e');
+      return [];
+    }
+  }
+
+  // Replace the streaming method with this simple one
+  Stream<List<Proverb>> getProverbs({String? categoryId}) {
+    // Create a stream controller to manage the data
+    final controller = StreamController<List<Proverb>>();
+
+    // Load all proverbs once and filter them
+    getAllProverbs()
+        .then((allProverbs) {
+          // Filter the list in memory
+          final filteredProverbs =
+              allProverbs.where((proverb) {
+                if (!proverb.isActive) return false;
+
+                if (categoryId != null && categoryId.isNotEmpty) {
+                  return proverb.categoryId == categoryId;
+                }
+
+                return true;
+              }).toList();
+
+          // Add to stream and close
+          controller.add(filteredProverbs);
+          controller.close();
+        })
+        .catchError((error) {
+          controller.addError(error);
+          controller.close();
+        });
+
+    return controller.stream;
   }
 
   // Get proverb by id

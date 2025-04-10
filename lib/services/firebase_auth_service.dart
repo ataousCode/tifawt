@@ -223,7 +223,6 @@ class FirebaseAuthService {
     }
   }
 
-  // Change password
   Future<void> changePassword(
     String currentPassword,
     String newPassword,
@@ -233,8 +232,6 @@ class FirebaseAuthService {
       if (user == null || user.email == null) {
         throw Exception('User is not authenticated.');
       }
-
-      // Re-authenticate the user
       final credential = EmailAuthProvider.credential(
         email: user.email!,
         password: currentPassword,
@@ -256,8 +253,6 @@ class FirebaseAuthService {
       if (user == null || user.email == null) {
         throw Exception('User is not authenticated.');
       }
-
-      // Re-authenticate the user
       final credential = EmailAuthProvider.credential(
         email: user.email!,
         password: password,
@@ -265,10 +260,8 @@ class FirebaseAuthService {
 
       await user.reauthenticateWithCredential(credential);
 
-      // Delete user data from Firestore
       await _firestore.collection('users').doc(user.uid).delete();
 
-      // Delete the user account
       await user.delete();
     } catch (e) {
       rethrow;

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tifawt/utils/helpers.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
@@ -82,7 +83,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: Switch(
               value: true,
               onChanged: (value) {
-                //Implement push notifications toggle
+                // Show implementation message
+                Helpers.showSnackBar(
+                  context,
+                  'Push notifications will be implemented in the next update!',
+                  isSuccess: true,
+                );
               },
               activeColor: ThemeConstants.primaryColor,
             ),
@@ -93,12 +99,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             trailing: Switch(
               value: false,
               onChanged: (value) {
-                //Implement email notifications toggle
+                // Show implementation message
+                Helpers.showSnackBar(
+                  context,
+                  'Email notifications will be implemented in the next update!',
+                  isSuccess: true,
+                );
               },
               activeColor: ThemeConstants.primaryColor,
             ),
           ),
-
           const Divider(),
 
           // Account section

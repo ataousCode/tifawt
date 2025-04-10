@@ -50,20 +50,20 @@ class Helpers {
   }
 
   // UI helpers
-  static void showSnackBar(
-    BuildContext context,
-    String message, {
-    bool isError = false,
-  }) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.black,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
+  // static void showSnackBar(
+  //   BuildContext context,
+  //   String message, {
+  //   bool isError = false,
+  // }) {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Text(message),
+  //       backgroundColor: isError ? Colors.red : Colors.black,
+  //       behavior: SnackBarBehavior.floating,
+  //       duration: const Duration(seconds: 3),
+  //     ),
+  //   );
+  // }
 
   static void showSuccessSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -210,5 +210,32 @@ class Helpers {
     );
 
     return regex.hasMatch(url);
+  }
+
+  static void showSnackBar(
+    BuildContext context,
+    String message, {
+    bool isError = false,
+    bool isSuccess = false,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            if (isError)
+              const Icon(Icons.error_outline, color: Colors.white)
+            else if (isSuccess)
+              const Icon(Icons.check_circle_outline, color: Colors.white),
+            const SizedBox(width: 10),
+            Expanded(child: Text(message)),
+          ],
+        ),
+        backgroundColor:
+            isError ? Colors.red : (isSuccess ? Colors.green : Colors.black87),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 }

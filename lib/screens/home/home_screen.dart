@@ -69,28 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
       proverbProvider.loadBookmarkedProverbs(authProvider.user!.uid);
     }
   }
-  // Future<void> _loadData() async {
-  //   final authProvider = Provider.of<AuthProvider>(context, listen: false);
-  //   final categoryProvider = Provider.of<CategoryProvider>(
-  //     context,
-  //     listen: false,
-  //   );
-  //   final proverbProvider = Provider.of<ProverbProvider>(
-  //     context,
-  //     listen: false,
-  //   );
-
-  //   if (categoryProvider.selectedCategory != null) {
-  //     proverbProvider.loadProverbsByCategory(
-  //       categoryProvider.selectedCategory!.id,
-  //     );
-  //   }
-
-  //   if (authProvider.isAuthenticated) {
-  //     proverbProvider.loadFavoriteProverbs(authProvider.user!.uid);
-  //     proverbProvider.loadBookmarkedProverbs(authProvider.user!.uid);
-  //   }
-  // }
 
   // Handle bottom navigation bar tap
   void _onBottomNavTap(int index) {
@@ -175,18 +153,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final categoryProvider = Provider.of<CategoryProvider>(context);
     final proverbProvider = Provider.of<ProverbProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       appBar: CustomAppBar(
         title: AppConstants.appName,
         showBackButton: false,
         actions: [
-          // IconButton(
-          //   icon: const Icon(Icons.search),
-          //   onPressed: () {
-          //     Helpers.showSnackBar(context, 'Search coming soon!');
-          //   },
-          // ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
@@ -210,15 +183,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
 
-              Helpers.showSnackBar(context, 'Proverbs refreshed');
+              // Helpers.showSnackBar(context, 'Proverbs refreshed');
+              Helpers.showSnackBar(
+                context,
+                'Proverbs refreshed',
+                isSuccess: true,
+              );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppConstants.settingsRoute);
-            },
-          ),
+          if (authProvider.isAdmin)
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppConstants.settingsRoute);
+              },
+            ),
+          // IconButton(
+          //   icon: const Icon(Icons.settings),
+          //   onPressed: () {
+          //     Navigator.of(context).pushNamed(AppConstants.settingsRoute);
+          //   },
+          // ),
           //! Reset later if needed
         ],
       ),

@@ -36,6 +36,7 @@ class AppConstants {
   static const String termsServiceRoute = '/terms-service';
   static const String privacyPolicyRoute = '/privacy-policy';
   static const String helpCenterRoute = '/help-center';
+  static const String deleteAccountRoute = '/delete-account';
 
   // Animation durations
   static const int splashDuration = 2000; // milliseconds

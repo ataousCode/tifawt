@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tifawt/screens/admin/manage_users_screen.dart';
+import 'package:tifawt/screens/auth/delete_account_screen.dart';
 
 import '../screens/splash_screen.dart';
 import '../screens/auth/login_screen.dart';
@@ -53,6 +54,7 @@ class Routes {
       AppConstants.termsServiceRoute: (context) => const TermsServiceScreen(),
       AppConstants.privacyPolicyRoute: (context) => const PrivacyPolicyScreen(),
       AppConstants.helpCenterRoute: (context) => const HelpCenterScreen(),
+      AppConstants.deleteAccountRoute: (context) => const DeleteAccountScreen(),
     };
   }
 
