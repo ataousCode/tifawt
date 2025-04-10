@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/proverb.dart';
@@ -34,6 +35,10 @@ class ProverbProvider with ChangeNotifier {
 
     try {
       _setLoading(true);
+      _clearError(); // Add this line to clear any previous errors
+
+      // Force reload from Firebase - don't use cache
+      await FirebaseFirestore.instance.clearPersistence();
 
       _databaseService.getProverbs(categoryId: categoryId).listen((proverbs) {
         _proverbs = proverbs;
@@ -49,11 +54,37 @@ class ProverbProvider with ChangeNotifier {
         notifyListeners();
       });
     } catch (e) {
+      print("Error loading proverbs: ${e.toString()}"); // Debug log
       _setError(e.toString());
     } finally {
       _setLoading(false);
     }
   }
+  // Future<void> loadProverbsByCategory(String? categoryId) async {
+  //   _selectedCategoryId = categoryId;
+
+  //   try {
+  //     _setLoading(true);
+
+  //     _databaseService.getProverbs(categoryId: categoryId).listen((proverbs) {
+  //       _proverbs = proverbs;
+
+  //       if (_proverbs.isNotEmpty) {
+  //         _currentProverb = _proverbs.first;
+  //         _currentIndex = 0;
+  //       } else {
+  //         _currentProverb = null;
+  //         _currentIndex = 0;
+  //       }
+
+  //       notifyListeners();
+  //     });
+  //   } catch (e) {
+  //     _setError(e.toString());
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
 
   // Get proverb by id
   Future<Proverb?> getProverbById(String id) async {
@@ -310,8 +341,8 @@ class ProverbProvider with ChangeNotifier {
   }
 
   // Clear error
-  // void _clearError() {
-  //   _error = null;
-  //   notifyListeners();
-  // }
+  void _clearError() {
+    _error = null;
+    notifyListeners();
+  }
 }

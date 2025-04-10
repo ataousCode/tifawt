@@ -76,8 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _navigateToChangePassword() {
-    //Implement change password screen
-    Helpers.showSnackBar(context, 'Change password functionality coming soon!');
+    Navigator.of(context).pushNamed(AppConstants.changePasswordRoute);
   }
 
   void _showDeleteAccountDialog() {

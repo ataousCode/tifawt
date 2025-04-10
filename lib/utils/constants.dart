@@ -30,6 +30,12 @@ class AppConstants {
   static const String manageCategoriesRoute = '/manage-categories';
   static const String manageProverbsRoute = '/manage-proverbs';
   static const String manageUsersRoute = '/manage-users';
+  static const String changePasswordRoute = '/change-password';
+  static const String rateAppRoute = '/rate-app';
+  static const String feedbackRoute = '/feedback';
+  static const String termsServiceRoute = '/terms-service';
+  static const String privacyPolicyRoute = '/privacy-policy';
+  static const String helpCenterRoute = '/help-center';
 
   // Animation durations
   static const int splashDuration = 2000; // milliseconds

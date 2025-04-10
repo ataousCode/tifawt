@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Load initial data
   Future<void> _loadData() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final categoryProvider = Provider.of<CategoryProvider>(
       context,
       listen: false,
@@ -53,9 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
       listen: false,
     );
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
+    // First, load all proverbs regardless of category (pass null to load all)
+    await proverbProvider.loadProverbsByCategory(null);
+
+    // Then, if there's a selected category, filter to that category
     if (categoryProvider.selectedCategory != null) {
-      proverbProvider.loadProverbsByCategory(
+      await proverbProvider.loadProverbsByCategory(
         categoryProvider.selectedCategory!.id,
       );
     }
@@ -65,6 +69,28 @@ class _HomeScreenState extends State<HomeScreen> {
       proverbProvider.loadBookmarkedProverbs(authProvider.user!.uid);
     }
   }
+  // Future<void> _loadData() async {
+  //   final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //   final categoryProvider = Provider.of<CategoryProvider>(
+  //     context,
+  //     listen: false,
+  //   );
+  //   final proverbProvider = Provider.of<ProverbProvider>(
+  //     context,
+  //     listen: false,
+  //   );
+
+  //   if (categoryProvider.selectedCategory != null) {
+  //     proverbProvider.loadProverbsByCategory(
+  //       categoryProvider.selectedCategory!.id,
+  //     );
+  //   }
+
+  //   if (authProvider.isAuthenticated) {
+  //     proverbProvider.loadFavoriteProverbs(authProvider.user!.uid);
+  //     proverbProvider.loadBookmarkedProverbs(authProvider.user!.uid);
+  //   }
+  // }
 
   // Handle bottom navigation bar tap
   void _onBottomNavTap(int index) {
@@ -155,10 +181,36 @@ class _HomeScreenState extends State<HomeScreen> {
         title: AppConstants.appName,
         showBackButton: false,
         actions: [
+          // IconButton(
+          //   icon: const Icon(Icons.search),
+          //   onPressed: () {
+          //     Helpers.showSnackBar(context, 'Search coming soon!');
+          //   },
+          // ),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.refresh),
             onPressed: () {
-              Helpers.showSnackBar(context, 'Search coming soon!');
+              // Force reload all proverbs
+              final proverbProvider = Provider.of<ProverbProvider>(
+                context,
+                listen: false,
+              );
+              final categoryProvider = Provider.of<CategoryProvider>(
+                context,
+                listen: false,
+              );
+
+              // First load all proverbs
+              proverbProvider.loadProverbsByCategory(null);
+
+              // Then load for current category if one is selected
+              if (categoryProvider.selectedCategory != null) {
+                proverbProvider.loadProverbsByCategory(
+                  categoryProvider.selectedCategory!.id,
+                );
+              }
+
+              Helpers.showSnackBar(context, 'Proverbs refreshed');
             },
           ),
           IconButton(

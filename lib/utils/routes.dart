@@ -15,6 +15,12 @@ import '../screens/admin/admin_dashboard.dart';
 import '../screens/admin/add_proverb_screen.dart';
 import '../screens/admin/manage_categories_screen.dart';
 import '../screens/admin/manage_proverbs_screen.dart';
+import '../screens/auth/change_password_screen.dart';
+import '../screens/settings/rate_app_screen.dart';
+import '../screens/settings/feedback_screen.dart';
+import '../screens/settings/terms_service_screen.dart';
+import '../screens/settings/privacy_policy_screen.dart';
+import '../screens/settings/help_center_screen.dart';
 
 import 'constants.dart';
 
@@ -40,6 +46,13 @@ class Routes {
       AppConstants.manageProverbsRoute:
           (context) => const ManageProverbsScreen(),
       AppConstants.manageUsersRoute: (context) => const ManageUsersScreen(),
+      AppConstants.changePasswordRoute:
+          (context) => const ChangePasswordScreen(),
+      AppConstants.rateAppRoute: (context) => const RateAppScreen(),
+      AppConstants.feedbackRoute: (context) => const FeedbackScreen(),
+      AppConstants.termsServiceRoute: (context) => const TermsServiceScreen(),
+      AppConstants.privacyPolicyRoute: (context) => const PrivacyPolicyScreen(),
+      AppConstants.helpCenterRoute: (context) => const HelpCenterScreen(),
     };
   }
 

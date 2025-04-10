@@ -131,6 +131,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
           // About section
           _buildSectionHeader('About'),
+
+          _buildSettingItem(
+            icon: Icons.description,
+            title: 'Terms of Service',
+            onTap: () {
+              Navigator.of(context).pushNamed(AppConstants.termsServiceRoute);
+            },
+          ),
+          _buildSettingItem(
+            icon: Icons.privacy_tip,
+            title: 'Privacy Policy',
+            onTap: () {
+              Navigator.of(context).pushNamed(AppConstants.privacyPolicyRoute);
+            },
+          ),
+          _buildSettingItem(
+            icon: Icons.star,
+            title: 'Rate App',
+            onTap: () {
+              Navigator.of(context).pushNamed(AppConstants.rateAppRoute);
+            },
+          ),
+          _buildSettingItem(
+            icon: Icons.feedback,
+            title: 'Send Feedback',
+            onTap: () {
+              Navigator.of(context).pushNamed(AppConstants.feedbackRoute);
+            },
+          ),
+          _buildSettingItem(
+            icon: Icons.help_outline,
+            title: 'Help Center',
+            onTap: () {
+              Navigator.of(context).pushNamed(AppConstants.helpCenterRoute);
+            },
+          ),
           _buildSettingItem(
             icon: Icons.info,
             title: 'Version',
@@ -138,34 +174,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _appVersion,
               style: ThemeConstants.bodyStyle.copyWith(color: Colors.grey),
             ),
-          ),
-          _buildSettingItem(
-            icon: Icons.description,
-            title: 'Terms of Service',
-            onTap: () {
-              //Implement terms of service
-            },
-          ),
-          _buildSettingItem(
-            icon: Icons.privacy_tip,
-            title: 'Privacy Policy',
-            onTap: () {
-              //Implement privacy policy
-            },
-          ),
-          _buildSettingItem(
-            icon: Icons.star,
-            title: 'Rate App',
-            onTap: () {
-              //Implement rate app
-            },
-          ),
-          _buildSettingItem(
-            icon: Icons.feedback,
-            title: 'Send Feedback',
-            onTap: () {
-              //Implement send feedback
-            },
           ),
         ],
       ),
