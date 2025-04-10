@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       )
                       .fade(duration: 500.ms),
 
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 20),
 
                   // Login card
                   Card(

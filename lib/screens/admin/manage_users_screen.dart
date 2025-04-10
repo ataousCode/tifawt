@@ -414,7 +414,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   }
 
   Widget _buildUserCard(UserModel user) {
-    final currentUser = Provider.of<AuthProvider>(context).user;
+    final currentUser = Provider.of<AuthProvider>(context, listen: false).user;
     final isCurrentUser = currentUser?.uid == user.id;
 
     return Card(
@@ -498,28 +498,26 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               ],
             ),
             const SizedBox(height: 4),
-            Row(
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 const Icon(Icons.favorite, size: 14, color: Colors.red),
-                const SizedBox(width: 4),
                 Text(
                   'Favorites: ${user.favoriteProverbs.length}',
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
-                const SizedBox(width: 8),
                 const Icon(
                   Icons.bookmark,
                   size: 14,
                   color: ThemeConstants.primaryColor,
                 ),
-                const SizedBox(width: 4),
                 Text(
                   'Bookmarks: ${user.bookmarkedProverbs.length}',
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
-                const SizedBox(width: 8),
                 const Icon(Icons.visibility, size: 14, color: Colors.grey),
-                const SizedBox(width: 4),
                 Text(
                   'Read: ${user.readProverbs.length}',
                   style: const TextStyle(fontSize: 12, color: Colors.grey),
@@ -530,7 +528,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
         ),
         trailing:
             isCurrentUser
-                ? null // Don't allow changing your own admin status admin_panel_settings_off
+                ? null
                 : IconButton(
                   icon: Icon(
                     user.isAdmin
