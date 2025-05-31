@@ -46,15 +46,6 @@ class MyApp extends StatelessWidget {
             initialRoute: AppConstants.splashRoute,
             routes: Routes.getRoutes(),
             onGenerateRoute: Routes.generateRoute,
-            // localizationsDelegates: const [
-            //   GlobalMaterialLocalizations.delegate,
-            //   GlobalWidgetsLocalizations.delegate,
-            //   GlobalCupertinoLocalizations.delegate,
-            // ],
-            // supportedLocales: const [
-            //   Locale('en', 'US'),
-            //   Locale('ar', 'SA'), // Add Arabic for RTL support
-            // ],
           );
         },
       ),

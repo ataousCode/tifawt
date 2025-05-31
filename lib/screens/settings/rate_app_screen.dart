@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, deprecated_member_use, use_super_parameters
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -269,10 +271,7 @@ class _RateAppScreenState extends State<RateAppScreen> {
                         );
                       }),
                     ),
-
                     const SizedBox(height: ThemeConstants.extraLargePadding),
-
-                    // Submit button or rating info
                     if (!_hasRated)
                       SizedBox(
                         width: double.infinity,

@@ -3,7 +3,7 @@ import '../../widgets/custom_app_bar.dart';
 import '../../theme/theme_constants.dart';
 
 class TermsServiceScreen extends StatelessWidget {
-  const TermsServiceScreen({Key? key}) : super(key: key);
+  const TermsServiceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

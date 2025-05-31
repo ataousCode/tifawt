@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, use_super_parameters
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,8 +32,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
 
   Future<void> _deleteAccount() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-    // Validate email
     if (_emailController.text.trim() != authProvider.userModel?.email) {
       Helpers.showErrorSnackBar(
         context,
@@ -42,7 +40,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
       return;
     }
 
-    // Validate checkbox
     if (!_agreeToDelete) {
       Helpers.showErrorSnackBar(
         context,
@@ -50,7 +47,6 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
       );
       return;
     }
-
     setState(() {
       _isLoading = true;
     });

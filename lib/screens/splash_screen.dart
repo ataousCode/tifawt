@@ -30,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _navigateToNextScreen();
+        //_checkAuthAndNavigate();
       }
     });
 
@@ -46,6 +47,20 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.dispose();
     super.dispose();
   }
+
+  // void _checkAuthAndNavigate() async {
+  //   if (_hasNavigated) return;
+
+  //   final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+  //   // wait for the auth state to be determined
+  //   while(authProvider.status == AuthStatus.uninitialized) {
+  //     await Future.delayed(const Duration(milliseconds: 1000));
+  //     if (!mounted) return;
+  //   }
+
+  //   _navigateToNextScreen();
+  // }
 
   void _navigateToNextScreen() {
     if (_hasNavigated) return;
@@ -66,7 +81,16 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        // Auto-navigate when auth stats is determined
+        if (!_hasNavigated && authProvider.status != AuthStatus.uninitialized) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _navigateToNextScreen();
+          });
+        }
+
+        return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -101,6 +125,8 @@ class _SplashScreenState extends State<SplashScreen>
           ],
         ),
       ),
+    );
+      },
     );
   }
 }

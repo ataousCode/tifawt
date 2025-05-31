@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, unnecessary_to_list_in_spreads, use_build_context_synchronously, await_only_futures, use_super_parameters
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +56,7 @@ class ProverbProvider with ChangeNotifier {
         notifyListeners();
       });
     } catch (e) {
-      print("Error loading proverbs: ${e.toString()}"); // Debug log
+      print("Error loading proverbs: ${e.toString()}");
       _setError(e.toString());
     } finally {
       _setLoading(false);

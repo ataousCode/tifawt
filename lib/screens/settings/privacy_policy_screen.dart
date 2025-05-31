@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:flutter/material.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../theme/theme_constants.dart';

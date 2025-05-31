@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,23 +53,16 @@ class FirebaseDatabaseService {
     }
   }
 
-  // Replace the streaming method with this simple one
   Stream<List<Proverb>> getProverbs({String? categoryId}) {
-    // Create a stream controller to manage the data
     final controller = StreamController<List<Proverb>>();
-
-    // Load all proverbs once and filter them
     getAllProverbs()
         .then((allProverbs) {
-          // Filter the list in memory
           final filteredProverbs =
               allProverbs.where((proverb) {
                 if (!proverb.isActive) return false;
-
                 if (categoryId != null && categoryId.isNotEmpty) {
                   return proverb.categoryId == categoryId;
                 }
-
                 return true;
               }).toList();
 
