@@ -45,6 +45,13 @@ class FirebaseDatabaseService {
 
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // Add document ID to data
+        
+        // Handle Firestore Timestamp
+        if (data['createdAt'] is Timestamp) {
+          data['createdAt'] = (data['createdAt'] as Timestamp).toDate().toIso8601String();
+        }
+        
         return Proverb.fromJson(data);
       }).toList();
     } catch (e) {
@@ -53,29 +60,57 @@ class FirebaseDatabaseService {
     }
   }
 
+  // Stream<List<Proverb>> getProverbs({String? categoryId}) {
+  //   final controller = StreamController<List<Proverb>>();
+  //   getAllProverbs()
+  //       .then((allProverbs) {
+  //         final filteredProverbs =
+  //             allProverbs.where((proverb) {
+  //               if (!proverb.isActive) return false;
+  //               if (categoryId != null && categoryId.isNotEmpty) {
+  //                 return proverb.categoryId == categoryId;
+  //               }
+  //               return true;
+  //             }).toList();
+
+  //         // Add to stream and close
+  //         controller.add(filteredProverbs);
+  //         controller.close();
+  //       })
+  //       .catchError((error) {
+  //         controller.addError(error);
+  //         controller.close();
+  //       });
+
+  //   return controller.stream;
+  // }
+
   Stream<List<Proverb>> getProverbs({String? categoryId}) {
-    final controller = StreamController<List<Proverb>>();
-    getAllProverbs()
-        .then((allProverbs) {
-          final filteredProverbs =
-              allProverbs.where((proverb) {
-                if (!proverb.isActive) return false;
-                if (categoryId != null && categoryId.isNotEmpty) {
-                  return proverb.categoryId == categoryId;
-                }
-                return true;
-              }).toList();
-
-          // Add to stream and close
-          controller.add(filteredProverbs);
-          controller.close();
-        })
-        .catchError((error) {
-          controller.addError(error);
-          controller.close();
-        });
-
-    return controller.stream;
+    // Use simple query without compound where clauses to avoid index requirement
+    return _proverbsCollection.snapshots().map((snapshot) {
+      List<Proverb> proverbs = snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id;
+        
+        // Handle Firestore Timestamp
+        if (data['createdAt'] is Timestamp) {
+          data['createdAt'] = (data['createdAt'] as Timestamp).toDate().toIso8601String();
+        }
+        
+        return Proverb.fromJson(data);
+      }).toList();
+      
+      // Filter in memory to avoid compound query indexing issues
+      proverbs = proverbs.where((proverb) => proverb.isActive).toList();
+      
+      if (categoryId != null && categoryId.isNotEmpty) {
+        proverbs = proverbs.where((proverb) => proverb.categoryId == categoryId).toList();
+      }
+      
+      // Sort in memory by creation date (newest first)
+      proverbs.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return proverbs;
+    });
   }
 
   // Get proverb by id
@@ -84,7 +119,15 @@ class FirebaseDatabaseService {
       final docSnapshot = await _proverbsCollection.doc(id).get();
 
       if (docSnapshot.exists) {
-        return Proverb.fromJson(docSnapshot.data() as Map<String, dynamic>);
+        Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+        data['id'] = docSnapshot.id; // Add document ID to data
+        
+        // Handle Firestore Timestamp
+        if (data['createdAt'] is Timestamp) {
+          data['createdAt'] = (data['createdAt'] as Timestamp).toDate().toIso8601String();
+        }
+        
+        return Proverb.fromJson(data);
       }
 
       return null;
@@ -170,19 +213,37 @@ class FirebaseDatabaseService {
 
   // ************ Categories Methods ************
 
+  // Get proverb count for a category
+  Future<int> getProverbCountForCategory(String categoryId) async {
+    try {
+      final querySnapshot = await _proverbsCollection
+          .where('categoryId', isEqualTo: categoryId)
+          .where('isActive', isEqualTo: true)
+          .get();
+      return querySnapshot.docs.length;
+    } catch (e) {
+      return 0;
+    }
+  }
+
   // Get all categories
   Stream<List<Category>> getCategories({bool activeOnly = true}) {
-    Query query = _categoriesCollection;
-
-    if (activeOnly) {
-      query = query.where('isActive', isEqualTo: true);
-    }
-
-    return query.orderBy('order').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
+    // Remove all where clauses to avoid any indexing issues
+    return _categoriesCollection.snapshots().map((snapshot) {
+      List<Category> categories = snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id; // Ensure id is set
         return Category.fromJson(data);
       }).toList();
+      
+      // Filter in memory if activeOnly is true
+      if (activeOnly) {
+        categories = categories.where((category) => category.isActive).toList();
+      }
+      
+      // Sort in memory by order
+      categories.sort((a, b) => a.order.compareTo(b.order));
+      return categories;
     });
   }
 
@@ -380,14 +441,24 @@ class FirebaseDatabaseService {
         final querySnapshot =
             await _proverbsCollection
                 .where('id', whereIn: chunk)
-                .where('isActive', isEqualTo: true)
                 .get();
 
         final proverbs =
             querySnapshot.docs
                 .map(
-                  (doc) => Proverb.fromJson(doc.data() as Map<String, dynamic>),
+                  (doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    data['id'] = doc.id; // Add document ID to data
+                    
+                    // Handle Firestore Timestamp
+                    if (data['createdAt'] is Timestamp) {
+                      data['createdAt'] = (data['createdAt'] as Timestamp).toDate().toIso8601String();
+                    }
+                    
+                    return Proverb.fromJson(data);
+                  },
                 )
+                .where((proverb) => proverb.isActive) // Filter in memory
                 .toList();
 
         results.addAll(proverbs);
@@ -431,14 +502,24 @@ class FirebaseDatabaseService {
         final querySnapshot =
             await _proverbsCollection
                 .where('id', whereIn: chunk)
-                .where('isActive', isEqualTo: true)
                 .get();
 
         final proverbs =
             querySnapshot.docs
                 .map(
-                  (doc) => Proverb.fromJson(doc.data() as Map<String, dynamic>),
+                  (doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    data['id'] = doc.id; // Add document ID to data
+                    
+                    // Handle Firestore Timestamp
+                    if (data['createdAt'] is Timestamp) {
+                      data['createdAt'] = (data['createdAt'] as Timestamp).toDate().toIso8601String();
+                    }
+                    
+                    return Proverb.fromJson(data);
+                  },
                 )
+                .where((proverb) => proverb.isActive) // Filter in memory
                 .toList();
 
         results.addAll(proverbs);

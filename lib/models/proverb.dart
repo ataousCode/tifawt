@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Proverb {
   final String id;
   final String text;
@@ -64,6 +66,36 @@ class Proverb {
       createdAt: createdAt ?? this.createdAt,
       viewCount: viewCount ?? this.viewCount,
       isActive: isActive ?? this.isActive,
+    );
+  }
+
+  // factory Proverb.fromFirestore(Map<String, dynamic> data, String documentId) {
+  //   return Proverb(
+  //     id: documentId,
+  //     text: data['text'] as String? ?? '',
+  //     author: data['author'] as String? ?? '',
+  //     categoryId: data['categoryId'] as String? ?? '',
+  //     backgroundImageUrl: data['backgroundImageUrl'] as String? ?? '',
+  //     createdAt: data['createdAt'] != null 
+  //         ? (data['createdAt'] as Timestamp).toDate()
+  //         : DateTime.now(),
+  //     viewCount: data['viewCount'] as int? ?? 0,
+  //     isActive: data['isActive'] as bool? ?? true,
+  //   );
+  // }
+
+  factory Proverb.fromFirestore(Map<String, dynamic> data, String documentId) {
+    return Proverb(
+      id: documentId,
+      text: data['text'] as String? ?? '',
+      author: data['author'] as String? ?? '',
+      categoryId: data['categoryId'] as String? ?? '',
+      backgroundImageUrl: data['backgroundImageUrl'] as String? ?? '',
+      createdAt: data['createdAt'] != null 
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      viewCount: data['viewCount'] as int? ?? 0,
+      isActive: data['isActive'] as bool? ?? true,
     );
   }
 }

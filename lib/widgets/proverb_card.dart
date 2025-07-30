@@ -37,105 +37,114 @@ class ProverbCard extends StatelessWidget {
           horizontal: ThemeConstants.mediumPadding,
           vertical: ThemeConstants.smallPadding,
         ),
+        height: 400, // Increased height for better visual impact
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(ThemeConstants.largeRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 10,
-              offset: const Offset(0, 5),
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 2,
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(ThemeConstants.largeRadius),
           child: Stack(
+            fit: StackFit.expand, // Make stack fill the entire container
             children: [
-              // Background image
+              // Background image - now fills the entire card
               CachedNetworkImage(
                 imageUrl: proverb.backgroundImageUrl,
-                height: 350,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                placeholder:
-                    (context, url) => Container(
-                      height: 350,
-                      width: double.infinity,
-                      color: Colors.grey[300],
+                fit: BoxFit.cover, // Cover the entire card area
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: 50,
+                      color: Colors.grey,
                     ),
-                errorWidget:
-                    (context, url, error) => Container(
-                      height: 350,
-                      width: double.infinity,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.error),
-                    ),
+                  ),
+                ),
               ),
 
-              // Gradient overlay
+              // Enhanced gradient overlay for better text readability
               Container(
-                height: 350,
-                width: double.infinity,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withOpacity(0.3),
-                      Colors.black.withOpacity(0.7),
+                      Colors.black.withOpacity(0.2),
+                      Colors.black.withOpacity(0.4),
+                      Colors.black.withOpacity(0.8),
                     ],
+                    stops: const [0.0, 0.5, 1.0],
                   ),
                 ),
               ),
 
-              // Content
-              Container(
-                height: 350,
-                width: double.infinity,
-                padding: const EdgeInsets.all(ThemeConstants.largePadding),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Proverb text
-                    Text(
-                      proverb.text,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 10.0,
-                            color: Colors.black,
-                            offset: Offset(2.0, 2.0),
-                          ),
-                        ],
+              // Content - positioned to fill the entire card
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.all(ThemeConstants.largePadding),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Proverb text with enhanced styling
+                      Text(
+                        proverb.text,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          height: 1.3,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 15.0,
+                              color: Colors.black,
+                              offset: Offset(2.0, 2.0),
+                            ),
+                            Shadow(
+                              blurRadius: 5.0,
+                              color: Colors.black,
+                              offset: Offset(1.0, 1.0),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
 
-                    const SizedBox(height: ThemeConstants.mediumPadding),
+                      const SizedBox(height: ThemeConstants.largePadding),
 
-                    // Author
-                    Text(
-                      '- ${proverb.author}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 10.0,
-                            color: Colors.black,
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
+                      // Author with enhanced styling
+                      Text(
+                        '— ${proverb.author}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.italic,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 10.0,
+                              color: Colors.black,
+                              offset: Offset(1.0, 1.0),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 

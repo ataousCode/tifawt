@@ -32,8 +32,18 @@ class CategoryProvider with ChangeNotifier {
 
       _databaseService.getCategories(activeOnly: activeOnly).listen((
         categories,
-      ) {
-        _categories = categories;
+      ) async {
+        // Filter out categories with no proverbs
+        List<Category> categoriesWithProverbs = [];
+        
+        for (Category category in categories) {
+          final proverbCount = await _databaseService.getProverbCountForCategory(category.id);
+          if (proverbCount > 0) {
+            categoriesWithProverbs.add(category);
+          }
+        }
+        
+        _categories = categoriesWithProverbs;
 
         if (_categories.isNotEmpty && _selectedCategory == null) {
           _selectedCategory = _categories.first;

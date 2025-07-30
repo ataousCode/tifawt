@@ -123,9 +123,9 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   }
 
   Future<void> _fetchUsers() async {
-    Query query = _firestore
-        .collection('users')
-        .orderBy('createdAt', descending: true);
+    Query query = _firestore.collection('users');
+    // Removed orderBy to avoid compound query indexing issues
+    // Will sort in memory after fetching
 
     // Apply search filter if provided
     if (_searchQuery.isNotEmpty) {
@@ -164,11 +164,20 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     _lastDocument = snapshot.docs.last;
 
     // Parse users
-    final newUsers =
+    List<UserModel> newUsers =
         snapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id; // Ensure id is set
           return UserModel.fromJson(data);
         }).toList();
+
+    // Sort in memory by createdAt (descending)
+    newUsers.sort((a, b) {
+      if (a.createdAt == null && b.createdAt == null) return 0;
+      if (a.createdAt == null) return 1;
+      if (b.createdAt == null) return -1;
+      return b.createdAt!.compareTo(a.createdAt!);
+    });
 
     // Update state
     setState(() {

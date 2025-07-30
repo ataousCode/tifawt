@@ -34,8 +34,7 @@ class Routes {
       AppConstants.forgotPasswordRoute:
           (context) => const ForgotPasswordScreen(),
       AppConstants.homeRoute: (context) => const HomeScreen(),
-      AppConstants.proverbDetailsRoute:
-          (context) => const ProverbDetailsScreen(),
+      // AppConstants.proverbDetailsRoute: removed to use generateRoute for argument handling
       AppConstants.favoritesRoute: (context) => const FavoritesScreen(),
       AppConstants.bookmarksRoute: (context) => const BookmarksScreen(),
       AppConstants.profileRoute: (context) => const ProfileScreen(),

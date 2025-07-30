@@ -39,9 +39,6 @@ class ProverbProvider with ChangeNotifier {
       _setLoading(true);
       _clearError(); // Add this line to clear any previous errors
 
-      // Force reload from Firebase - don't use cache
-      await FirebaseFirestore.instance.clearPersistence();
-
       _databaseService.getProverbs(categoryId: categoryId).listen((proverbs) {
         _proverbs = proverbs;
 

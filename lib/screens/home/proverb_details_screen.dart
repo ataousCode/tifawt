@@ -32,7 +32,9 @@ class _ProverbDetailsScreenState extends State<ProverbDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadProverb();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProverb();
+    });
   }
 
   Future<void> _loadProverb() async {
