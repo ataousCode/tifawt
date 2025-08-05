@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/category_provider.dart';
 import '../../providers/proverb_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../theme/theme_constants.dart';
 import '../../utils/constants.dart';
+import '../../utils/helpers.dart';
 import '../../widgets/custom_app_bar.dart';
 
 class AdminDashboard extends StatefulWidget {
@@ -37,42 +40,160 @@ class _AdminDashboardState extends State<AdminDashboard> {
     categoryProvider.loadCategories(activeOnly: false);
   }
 
+  Future<void> _logout() async {
+    await Helpers.logout(context, showConfirmation: true);
+  }
+
+  Widget _buildStatCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            color: color,
+            size: 32,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionCard(
+    String title,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 32,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final proverbProvider = Provider.of<ProverbProvider>(context);
     final categoryProvider = Provider.of<CategoryProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.darkMode;
 
     if (!authProvider.isAuthenticated || !authProvider.isAdmin) {
       return Scaffold(
-        appBar: const CustomAppBar(title: 'Admin Dashboard'),
+        backgroundColor: isDark ? Colors.grey[900] : Colors.grey[50],
+        appBar: AppBar(
+          title: const Text('Admin Dashboard'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.admin_panel_settings,
-                size: 80,
-                color: Colors.grey,
+              Icon(
+                Icons.admin_panel_settings_outlined,
+                size: 100,
+                color: Colors.grey[400],
               ),
-              const SizedBox(height: ThemeConstants.mediumPadding),
+              const SizedBox(height: 24),
               const Text(
-                'Admin access required',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                'Admin Access Required',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: ThemeConstants.smallPadding),
-              const Text(
-                'You need to be an admin to access this page',
+              const SizedBox(height: 12),
+              Text(
+                'You need administrator privileges to access this dashboard',
                 textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
               ),
-              const SizedBox(height: ThemeConstants.mediumPadding),
-              ElevatedButton(
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.of(
-                    context,
-                  ).pushReplacementNamed(AppConstants.homeRoute);
+                  Navigator.of(context).pushReplacementNamed(AppConstants.homeRoute);
                 },
-                child: const Text('Go to Home'),
+                icon: const Icon(Icons.home),
+                label: const Text('Go to Home'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                ),
               ),
             ],
           ),
@@ -81,259 +202,116 @@ class _AdminDashboardState extends State<AdminDashboard> {
     }
 
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Admin Dashboard'),
+      backgroundColor: isDark ? Colors.grey[900] : Colors.grey[50],
+      appBar: CustomAppBar(
+        title: 'Admin Dashboard',
+        showBackButton: false,
+        actions: [
+          IconButton(
+            onPressed: _logout,
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(ThemeConstants.largePadding),
+        padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Admin greeting
-            const Text(
-              'Welcome Admin',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: ThemeConstants.smallPadding),
-            const Text(
-              'Manage your proverbs and categories',
-              style: TextStyle(color: Colors.grey),
-            ),
-
-            const SizedBox(height: ThemeConstants.extraLargePadding),
-
-            // Quick actions
-            const Text(
-              'Quick Actions',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: ThemeConstants.mediumPadding),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildActionCard(
-                    icon: Icons.add_circle,
-                    title: 'Add Proverb',
-                    color: ThemeConstants.primaryColor,
-                    onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(AppConstants.addProverbRoute);
-                    },
-                  ),
-                ),
-                const SizedBox(width: ThemeConstants.mediumPadding),
-                Expanded(
-                  child: _buildActionCard(
-                    icon: Icons.category,
-                    title: 'Manage Categories',
-                    color: ThemeConstants.secondaryColor,
-                    onTap: () {
-                      Navigator.of(
-                        context,
-                      ).pushNamed(AppConstants.manageCategoriesRoute);
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: ThemeConstants.extraLargePadding),
-
-            // Stats
-            const Text(
-              'Statistics',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: ThemeConstants.mediumPadding),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    icon: Icons.menu_book,
-                    title: 'Total Proverbs',
-                    value: proverbProvider.proverbs.length.toString(),
-                    color: Colors.blue,
-                  ),
-                ),
-                const SizedBox(width: ThemeConstants.mediumPadding),
-                Expanded(
-                  child: _buildStatCard(
-                    icon: Icons.category,
-                    title: 'Categories',
-                    value: categoryProvider.categories.length.toString(),
-                    color: Colors.green,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: ThemeConstants.extraLargePadding),
-
-            // Management options
-            const Text(
-              'Management',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: ThemeConstants.mediumPadding),
-            _buildManagementCard(
-              icon: Icons.menu_book,
-              title: 'Manage Proverbs',
-              description: 'Add, edit, or delete proverbs',
-              onTap: () {
-                Navigator.of(
-                  context,
-                ).pushNamed(AppConstants.manageProverbsRoute);
-              },
-            ),
-            const SizedBox(height: ThemeConstants.mediumPadding),
-            _buildManagementCard(
-              icon: Icons.category,
-              title: 'Manage Categories',
-              description: 'Create, edit, or remove categories',
-              onTap: () {
-                Navigator.of(
-                  context,
-                ).pushNamed(AppConstants.manageCategoriesRoute);
-              },
-            ),
-            const SizedBox(height: ThemeConstants.mediumPadding),
-            _buildManagementCard(
-              icon: Icons.people,
-              title: 'Manage Users',
-              description: 'View and manage user accounts',
-              onTap: () {
-                Navigator.of(context).pushNamed(AppConstants.manageUsersRoute);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionCard({
-    required IconData icon,
-    required String title,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      elevation: ThemeConstants.smallElevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(ThemeConstants.mediumRadius),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(ThemeConstants.mediumRadius),
-        child: Padding(
-          padding: const EdgeInsets.all(ThemeConstants.largePadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 48, color: color),
-              const SizedBox(height: ThemeConstants.mediumPadding),
-              Text(
-                title,
-                style: ThemeConstants.subtitleStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatCard({
-    required IconData icon,
-    required String title,
-    required String value,
-    required Color color,
-  }) {
-    return Card(
-      elevation: ThemeConstants.smallElevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(ThemeConstants.mediumRadius),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(ThemeConstants.largePadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: color),
-                const SizedBox(width: ThemeConstants.smallPadding),
-                Text(title, style: ThemeConstants.captionStyle),
-              ],
-            ),
-            const SizedBox(height: ThemeConstants.mediumPadding),
-            Text(
-              value,
-              style: ThemeConstants.headlineStyle.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildManagementCard({
-    required IconData icon,
-    required String title,
-    required String description,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      elevation: ThemeConstants.smallElevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(ThemeConstants.mediumRadius),
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(ThemeConstants.mediumRadius),
-        child: Padding(
-          padding: const EdgeInsets.all(ThemeConstants.mediumPadding),
-          child: Row(
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: ThemeConstants.primaryLightColor,
-                  borderRadius: BorderRadius.circular(
-                    ThemeConstants.mediumRadius,
-                  ),
-                ),
-                child: Icon(icon, color: ThemeConstants.primaryColor, size: 30),
-              ),
-              const SizedBox(width: ThemeConstants.mediumPadding),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: ThemeConstants.subtitleStyle.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Statistics Section
+                  const Text(
+                    'Overview',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      description,
-                      style: ThemeConstants.captionStyle.copyWith(
-                        color: Colors.grey,
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          'Total Proverbs',
+                          proverbProvider.proverbs.length.toString(),
+                          Icons.format_quote,
+                          ThemeConstants.primaryColor,
+                        ).animate().slideX(delay: 200.ms, duration: 600.ms),
                       ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildStatCard(
+                          'Categories',
+                          categoryProvider.categories.length.toString(),
+                          Icons.category,
+                          Colors.orange,
+                        ).animate().slideX(delay: 400.ms, duration: 600.ms),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  
+                  // Management Actions
+                  const Text(
+                    'Management',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right),
-            ],
-          ),
+                  ),
+                  const SizedBox(height: 16),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1.1,
+                    children: [
+                      _buildActionCard(
+                        'Add Proverb',
+                        Icons.add_circle_outline,
+                        ThemeConstants.primaryColor,
+                        () {
+                          Navigator.of(context).pushNamed(
+                            AppConstants.addProverbRoute,
+                          );
+                        },
+                      ).animate().scale(delay: 200.ms, duration: 600.ms),
+                      _buildActionCard(
+                        'Manage Proverbs',
+                        Icons.format_quote_outlined,
+                        Colors.blue,
+                        () {
+                          Navigator.of(context).pushNamed(
+                            AppConstants.manageProverbsRoute,
+                          );
+                        },
+                      ).animate().scale(delay: 400.ms, duration: 600.ms),
+                      _buildActionCard(
+                        'Manage Categories',
+                        Icons.category_outlined,
+                        Colors.orange,
+                        () {
+                          Navigator.of(context).pushNamed(
+                            AppConstants.manageCategoriesRoute,
+                          );
+                        },
+                      ).animate().scale(delay: 600.ms, duration: 600.ms),
+                      _buildActionCard(
+                        'Manage Users',
+                        Icons.people_outline,
+                        Colors.green,
+                        () {
+                          Navigator.of(context).pushNamed(
+                            AppConstants.manageUsersRoute,
+                          );
+                        },
+                      ).animate().scale(delay: 800.ms, duration: 600.ms),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                ],
         ),
       ),
     );

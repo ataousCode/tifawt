@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+import 'constants.dart';
 
 class Helpers {
   // Date format helpers
@@ -237,5 +240,42 @@ class Helpers {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  // Authentication helpers
+  static Future<void> logout(BuildContext context, {bool showConfirmation = false}) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    
+    bool shouldLogout = true;
+    
+    if (showConfirmation) {
+      shouldLogout = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Are you sure you want to logout?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              child: const Text('Logout'),
+            ),
+          ],
+        ),
+      ) ?? false;
+    }
+
+    if (shouldLogout) {
+      await authProvider.signOut();
+      if (context.mounted) {
+        Navigator.of(context).pushReplacementNamed(AppConstants.loginRoute);
+      }
+    }
   }
 }

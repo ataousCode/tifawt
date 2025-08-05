@@ -11,7 +11,6 @@ import '../screens/home/home_screen.dart';
 import '../screens/home/proverb_details_screen.dart';
 import '../screens/home/favorites_screen.dart';
 import '../screens/home/bookmarks_screen.dart';
-import '../screens/settings/settings_screen.dart';
 import '../screens/admin/admin_dashboard.dart';
 import '../screens/admin/add_proverb_screen.dart';
 import '../screens/admin/manage_categories_screen.dart';
@@ -38,7 +37,7 @@ class Routes {
       AppConstants.favoritesRoute: (context) => const FavoritesScreen(),
       AppConstants.bookmarksRoute: (context) => const BookmarksScreen(),
       AppConstants.profileRoute: (context) => const ProfileScreen(),
-      AppConstants.settingsRoute: (context) => const SettingsScreen(),
+      //AppConstants.settingsRoute: (context) => const SettingsScreen(),
       AppConstants.adminDashboardRoute: (context) => const AdminDashboard(),
       AppConstants.addProverbRoute: (context) => const AddProverbScreen(),
       AppConstants.manageCategoriesRoute:
